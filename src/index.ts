@@ -53,6 +53,10 @@ export default class Dispatch {
   }
 
   async connect() {
+    if (this.ws) {
+      return;
+    }
+
     const baseUrl = 'wss://dispatch.api.gokoji.com/';
     const params: string[] = Object.keys(this.options).reduce((acc: string[], cur) => {
       if (this.options.cur) {
@@ -120,6 +124,7 @@ export default class Dispatch {
     if (this.ws) {
       this.ws.close();
     }
+    this.ws = null;
   }
 
   on(eventName: DISPATCH_EVENT|string, callback: (payload: {[index: string]: any}) => void) {
