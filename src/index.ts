@@ -59,7 +59,7 @@ export default class Dispatch {
 
     const baseUrl = 'wss://dispatch.api.gokoji.com/';
     const params: string[] = Object.keys(this.options).reduce((acc: string[], cur) => {
-      if (this.options.cur) {
+      if (this.options[cur]) {
         acc.push(`${cur}=${encodeURIComponent(this.options[cur])}`);
       }
       return acc;
