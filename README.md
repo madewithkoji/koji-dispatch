@@ -63,3 +63,10 @@ const dispatch = new Dispatch({
   }
 })
 ```
+
+You can retrieve a list of the current shards and their approximate connected client count by calling:
+```
+dispatch.info().then((shards) => {
+  // [{ shardName: "myshard", numConnectedClients: 10 }]
+});
+```
