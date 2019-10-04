@@ -8,6 +8,11 @@ export interface EventHandler {
   callback: (payload: {[index: string]: any}) => void;
 }
 
+export interface ShardInfo {
+  shardName: string;
+  numConnectedClients: number;
+}
+
 export enum DISPATCH_EVENT {
   CONNECTED = '@@KOJI_DISPATCH/CONNECTED',
   CONNECTED_CLIENTS_CHANGED = '@@KOJI_DISPATCH/CONNECTED_CLIENTS_CHANGED',
@@ -50,6 +55,12 @@ export default class Dispatch {
       projectId: config.projectId,
       ...this.config.options,
     };
+  }
+
+  async info(): Promise<ShardInfo[]> {
+    const request = await fetch(`https://dispatch-info.api.gokij.com/info/${this.config.projectId}`);
+    const result = await request.json();
+    return result;
   }
 
   async connect() {
