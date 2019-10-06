@@ -1,5 +1,6 @@
-import { containsProfanity } from './Profanity';
+import { containsProfanity, filterProfanity } from './Profanity';
 
 export default {
   containsProfanity,
+  filterProfanity,
 };

@@ -27,6 +27,11 @@ export default class Dispatch {
   private messageQueue: string[] = [];
   private eventHandlers: EventHandler[] = [];
 
+  private _latency: number = 0;
+  public get latency(): number {
+    return this._latency;
+  }
+
   // User ID is given to us on connection
   private _clientId: string|null = null;
   public get clientId(): string|null {
@@ -96,7 +101,11 @@ export default class Dispatch {
       },
       onmessage: (e) => {
         try {
-          const { eventName, payload } = JSON.parse(e.data);
+          const {
+            eventName,
+            payload,
+            timestamp,
+          } = JSON.parse(e.data);
           // Handle Koji scoped messages
           if (eventName === DISPATCH_EVENT.CONNECTED) {
             this._clientId = payload.clientId;
@@ -108,6 +117,7 @@ export default class Dispatch {
 
           // Handle custom messages
           this.eventHandlers.forEach((handler) => {
+            this._latency = Date.now() - timestamp;
             if (eventName === handler.eventName) {
               handler.callback(payload);
             }

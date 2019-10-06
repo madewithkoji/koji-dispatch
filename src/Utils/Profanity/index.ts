@@ -13,3 +13,7 @@ export function containsProfanity(string: string): boolean {
   }
   return false;
 }
+
+export function filterProfanity(string: string) {
+  return string.replace(generatePattern(), (match: string): string => Array(match.length).fill('*').join(''));
+}
