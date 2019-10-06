@@ -75,6 +75,8 @@ dispatch.info().then((shards) => {
 
 Koji dispatch comes with some utility functions to help you build realtime multiplayer games and apps:
 
+`import { Utils } from '@withkoji/dispatch';`
+
 - `Utils.profanilty('string to check')` will return true if a string contains profanity. This can be useful for usernames or chat.
 - `Utils.filterProfanity('string to check')` will return a new string with profanity replaced by asterisks
-- `Dispatch.latency` will give you the latency of the last message in milliseconds
+- `dispatch.latency` will give you the latency of the last message in milliseconds
