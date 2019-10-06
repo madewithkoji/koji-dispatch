@@ -1,6 +1,6 @@
 {
   "name": "@withkoji/dispatch",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Websocket-based HA event buffer for implementing realtime behavior in Koji Apps",
   "main": "./dist/index.js",
   "repository": {
