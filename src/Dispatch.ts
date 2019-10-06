@@ -106,6 +106,8 @@ export default class Dispatch {
             payload,
             timestamp,
           } = JSON.parse(e.data);
+          this._latency = Date.now() - timestamp;
+
           // Handle Koji scoped messages
           if (eventName === DISPATCH_EVENT.CONNECTED) {
             this._clientId = payload.clientId;
@@ -117,7 +119,6 @@ export default class Dispatch {
 
           // Handle custom messages
           this.eventHandlers.forEach((handler) => {
-            this._latency = Date.now() - timestamp;
             if (eventName === handler.eventName) {
               handler.callback(payload);
             }
