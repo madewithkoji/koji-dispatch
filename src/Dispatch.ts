@@ -63,7 +63,7 @@ export default class Dispatch {
   }
 
   async info(): Promise<ShardInfo[]> {
-    const request = await fetch(`https://dispatch-info.api.gokij.com/info/${this.config.projectId}`);
+    const request = await fetch(`https://dispatch-info.api.gokoji.com/info/${this.config.projectId}`);
     const result = await request.json();
     return result;
   }
