@@ -104,9 +104,9 @@ export default class Dispatch {
           const {
             eventName,
             payload,
-            timestamp,
+            latencyMs,
           } = JSON.parse(e.data);
-          this._latency = Date.now() - timestamp;
+          this._latency = latencyMs;
 
           // Handle Koji scoped messages
           if (eventName === DISPATCH_EVENT.CONNECTED) {
