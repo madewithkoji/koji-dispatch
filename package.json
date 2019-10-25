@@ -1,6 +1,6 @@
 {
   "name": "@withkoji/dispatch",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Websocket-based HA event buffer for implementing realtime behavior in Koji Apps",
   "main": "./dist/index.js",
   "repository": {
@@ -13,10 +13,11 @@
   "scripts": {
     "clean": "rm -fr dist",
     "build": "tsc",
+    "build:defs": "tsc --declaration --emitDeclarationOnly",
     "start": "npm-run-all clean build --parallel watch:* --print-label",
     "watch:build": "tsc --watch",
     "watch:server": "nodemon './dist/index.js' --watch './dist'",
-    "prepublish": "npm-run-all clean build",
+    "prepublish": "npm-run-all clean build build:defs",
     "test": "NODE_TEST=true mocha -r ts-node/register src/**/*.spec.ts"
   },
   "files": [
