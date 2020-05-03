@@ -106,26 +106,26 @@ export default class Dispatch {
             payload,
             latencyMs,
           } = JSON.parse(e.data);
-          this._latency = latencyMs;
-
-          // Handle Koji scoped messages
-          if (eventName === DISPATCH_EVENT.CONNECTED) {
-            this._clientId = payload.clientId;
-            this._shardName = payload.shardName;
-          }
-          if (eventName === DISPATCH_EVENT.CONNECTED_CLIENTS_CHANGED) {
-            this._connectedClients = payload.connectedClients;
-          }
-
-          // Handle custom messages
-          this.eventHandlers.forEach((handler) => {
-            if (eventName === handler.eventName) {
-              handler.callback(payload);
-            }
-          });
         } catch (err) {
           console.log('[Koji Dispatch] error parsing message');
         }
+        this._latency = latencyMs;
+
+        // Handle Koji scoped messages
+        if (eventName === DISPATCH_EVENT.CONNECTED) {
+          this._clientId = payload.clientId;
+          this._shardName = payload.shardName;
+        }
+        if (eventName === DISPATCH_EVENT.CONNECTED_CLIENTS_CHANGED) {
+          this._connectedClients = payload.connectedClients;
+        }
+
+        // Handle custom messages
+        this.eventHandlers.forEach((handler) => {
+          if (eventName === handler.eventName) {
+            handler.callback(payload);
+          }
+        });
       },
       onreconnect: (e) => {
         console.log('[Koji Dispatch] reconnected');
