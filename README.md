@@ -58,7 +58,7 @@ When you create a new dispatch object, you can specify an additional `options` k
 const dispatch = new Dispatch({
   projectId: Koji.config.metadata.projectId,
   options: {
-    shardName: 'expicitShardName', // the name of the shard you want to connect to. if this key is not present, the user will automatically be placed onto a shard
+    shardName: 'explicitShardName', // the name of the shard you want to connect to. if this key is not present, the user will automatically be placed onto a shard
     maxConnectionsPerShard: 20, // specify how many users to allow on a shard before it is "full" -- once a shard is full, new users will be added to a new shard unless a different shard is explicity set
   }
 })
@@ -77,6 +77,6 @@ Koji dispatch comes with some utility functions to help you build realtime multi
 
 `import { Utils } from '@withkoji/dispatch';`
 
-- `Utils.profanilty('string to check')` will return true if a string contains profanity. This can be useful for usernames or chat.
+- `Utils.profanity('string to check')` will return true if a string contains profanity. This can be useful for usernames or chat.
 - `Utils.filterProfanity('string to check')` will return a new string with profanity replaced by asterisks
 - `dispatch.latency` will give you the latency of the last message in milliseconds
