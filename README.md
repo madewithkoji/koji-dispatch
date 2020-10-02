@@ -1,82 +1,51 @@
 # Koji Dispatch
-**Create realtime functionality in your Koji apps. Build chats, multiplayer games, and more!**
 
-## Getting started
+**Create realtime functionality in your Koji apps.**
 
-Install the package in your Koji project:
-`npm i --save @withkoji/dispatch`
+## Overview
 
-Note that you should also have `@withkoji/vcc` installed.
+The @withkoji/dispatch package enables you to implement real-time functionality in your Koji template. For example, chats, multi-player games, and polls.
 
-Import the library and initialize a new Dispatch class.
+## Installation
+
+Install the package in your Koji projects' frontend services.
+
 ```
-import Dispatch, { DISPATCH_EVENT } from '@withkoji/dispatch';
+npm install --save @withkoji/dispatch
+```
+
+NOTE: You must also install the `@withkoji/vcc` package.
+
+## Basic use
+
+Import and initialise the dispatch package in your frontend service.
+
+```
+import Dispatch from '@withkoji/dispatch';
 const dispatch = new Dispatch({
-  projectId: Koji.config.metadata.projectId,
+  projectId: instantRemixing.get(['metadata', 'projectId']),
 });
 ```
 
-Koji dispatch comes with some predefined events to help you get up and running. Listen for them:
-
+Use the `connect` function to join an open shard.
 ```
-dispatch.on(DISPATCH_EVENT.CONNECTED, ({ clientId, shardName }) => {
-  // clientId is the internal ID of this client
-  // shardName is the name of the shard to which the user is connected. See below for more info
-});
-
-dispatch.on(DISPATCH_EVENT.CONNECTED_CLIENTS_CHANGED, ({ connectedClients }) => {
-  // connectedClients is an object of the form { clientId: { userInfo } }
-});
+dispatch.connect();
 ```
 
-After you connect, you can broadcast any JSON payload and all connected clients on the shard will receive it. Example:
-
+Emit and respond to events for multi-user functionality.
 ```
-dispatch.emitEvent('chat_message_sent', {
-  author: 'AuthorUsername',
-  body: 'This is the body of my message',
-});
-
-dispatch.on('chat_message_sent', (payload) => {
-  // payload will be an object matching the one we sent above
-  // it will also include the timestamp of the message and the ID of the client who sent it
-})
+dispatch.emitEvent('myEvent', myDataPayload);
+dispatch.on('myEvent', myHandlerFunction);
 ```
 
-## User data
+## Related resources
 
-You can specify persistent user data using `dispatch.setUserInfo({ object... })`. The object set here will be broadcast to all clients when they connect as part of the `DISPATCH_EVENT.CONNECTED_CLIENTS_CHANGED` event.
+* [Package documentation](https://developer.withkoji.com/reference/packages/withkoji-dispatch-package)
+* [Vote counter template](http://developer.withkoji.com/docs/blueprints/vote-counter-blueprint)
+* [Koji homepage](http://withkoji.com/)
 
-You can use this for things like attaching usernames, avatars, etc. to a client.
+## Contributions and questions
 
-## Understanding shards
+See the [contributions page](https://developer.withkoji.com/docs/about/contribute-koji-developers) on the developer site for info on how to make contributions to Koji repositories and developer documentation. 
 
-Think of shards like "servers" in a multiplayer game. You can use them to organize and separate different groups of users. This can be useful for performance reasons (e.g., you only want 20 players per world), or for organizing channels in a chatroom, or performing matchmaking in a 1v1 game.
-
-When you create a new dispatch object, you can specify an additional `options` key to configure how shards behave:
-```
-const dispatch = new Dispatch({
-  projectId: Koji.config.metadata.projectId,
-  options: {
-    shardName: 'explicitShardName', // the name of the shard you want to connect to. if this key is not present, the user will automatically be placed onto a shard
-    maxConnectionsPerShard: 20, // specify how many users to allow on a shard before it is "full" -- once a shard is full, new users will be added to a new shard unless a different shard is explicity set
-  }
-})
-```
-
-You can retrieve a list of the current shards and their approximate connected client count by calling:
-```
-dispatch.info().then((shards) => {
-  // [{ shardName: "myshard", numConnectedClients: 10 }]
-});
-```
-
-## Utils
-
-Koji dispatch comes with some utility functions to help you build realtime multiplayer games and apps:
-
-`import { Utils } from '@withkoji/dispatch';`
-
-- `Utils.profanity('string to check')` will return true if a string contains profanity. This can be useful for usernames or chat.
-- `Utils.filterProfanity('string to check')` will return a new string with profanity replaced by asterisks
-- `dispatch.latency` will give you the latency of the last message in milliseconds
+For any questions, reach out to the developer community or the `@Koji Team` on our [Discord server](https://discord.gg/eQuMJF6).
