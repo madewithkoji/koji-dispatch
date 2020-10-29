@@ -1,6 +1,6 @@
 # Koji Dispatch
 
-**Create realtime functionality in your Koji apps.**
+**Create real-time functionality in your Koji templates.**
 
 ## Overview
 
@@ -8,17 +8,17 @@ The @withkoji/dispatch package enables you to implement real-time functionality 
 
 ## Installation
 
-Install the package in your Koji projects' frontend services.
+Install the package in the frontend service of your Koji project.
 
 ```
 npm install --save @withkoji/dispatch
 ```
 
-NOTE: You must also install the `@withkoji/vcc` package.
+**NOTE:** You must also install the [@withkoji/vcc package](https://developer.withkoji.com/reference/packages/withkoji-vcc-package).
 
 ## Basic use
 
-Import and initialise the dispatch package in your frontend service.
+Import and instantiate `Dispatch`.
 
 ```
 import Dispatch from '@withkoji/dispatch';
@@ -46,6 +46,6 @@ dispatch.on('myEvent', myHandlerFunction);
 
 ## Contributions and questions
 
-See the [contributions page](https://developer.withkoji.com/docs/about/contribute-koji-developers) on the developer site for info on how to make contributions to Koji repositories and developer documentation. 
+See the [contributions page](https://developer.withkoji.com/docs/about/contribute-koji-developers) on the developer site for info on how to make contributions to Koji repositories and developer documentation.
 
 For any questions, reach out to the developer community or the `@Koji Team` on our [Discord server](https://discord.gg/eQuMJF6).
