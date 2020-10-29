@@ -100,15 +100,11 @@ export default class Dispatch {
         }
       },
       onmessage: (e) => {
-        try {
-          const {
-            eventName,
-            payload,
-            latencyMs,
-          } = JSON.parse(e.data);
-        } catch (err) {
-          console.log('[Koji Dispatch] error parsing message');
-        }
+        const {
+          eventName,
+          payload,
+          latencyMs,
+        } = JSON.parse(e.data);
         this._latency = latencyMs;
 
         // Handle Koji scoped messages
