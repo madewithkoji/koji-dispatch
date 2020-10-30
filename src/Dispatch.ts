@@ -3,6 +3,7 @@ const unsafeGlobal: any = global;
 unsafeGlobal.WebSocket = require('isomorphic-ws');
 
 import Sockette from 'sockette';
+import fetch from 'node-fetch';
 import { Config, ConfigOptions, DefaultOptions } from './Config';
 
 export interface EventHandler {
@@ -181,8 +182,10 @@ export default class Dispatch {
     if (!this.isConnected || !this.ws) {
       // Socket is not connected, add to queue to be flushed once the socket
       // conects
+      console.log('not open, queing', message);
       this.messageQueue.push(message);
     } else {
+      console.log('sending', message);
       this.ws.send(message);
     }
   }
