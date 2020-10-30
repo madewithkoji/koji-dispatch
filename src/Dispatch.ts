@@ -1,4 +1,6 @@
 // tslint:disable: variable-name
+const unsafeGlobal: any = global;
+unsafeGlobal.WebSocket = require('isomorphic-ws');
 
 import Sockette from 'sockette';
 import { Config, ConfigOptions, DefaultOptions } from './Config';
@@ -23,7 +25,7 @@ export default class Dispatch {
   private readonly options: ConfigOptions;
 
   private ws: Sockette|null = null;
-
+  private isConnected: boolean = false;
   private messageQueue: string[] = [];
   private eventHandlers: EventHandler[] = [];
 
@@ -69,72 +71,81 @@ export default class Dispatch {
   }
 
   async connect() {
-    if (this.ws) {
-      return;
-    }
-
-    const baseUrl = 'wss://dispatch.api.gokoji.com/';
-    const params: string[] = Object.keys(this.options).reduce((acc: string[], cur) => {
-      if (this.options[cur]) {
-        acc.push(`${cur}=${encodeURIComponent(this.options[cur])}`);
+    return new Promise((resolve) => {
+      if (this.ws) {
+        return;
       }
-      return acc;
-    }, []);
 
-    const url = `${baseUrl}?${params.join('&')}`;
-
-    // Create a socket connection to the dispatch server
-    this.ws = new Sockette(url, {
-      timeout: 5e3,
-      maxAttempts: 10,
-      onopen: (e) => {
-        console.info('[Koji Dispatch] Connected');
-        if (this.messageQueue.length > 0) {
-          console.info(`[Koji Dispatch] Flushing ${this.messageQueue.length} enqueued message(s)`);
-          this.messageQueue.reduce((acc, cur) => {
-            if (this.ws) {
-              this.ws.send(cur);
-            }
-            return acc;
-          }, []);
+      const baseUrl = 'wss://dispatch.api.gokoji.com/';
+      const params: string[] = Object.keys(this.options).reduce((acc: string[], cur) => {
+        if (this.options[cur]) {
+          acc.push(`${cur}=${encodeURIComponent(this.options[cur])}`);
         }
-      },
-      onmessage: (e) => {
-        const {
-          eventName,
-          payload,
-          latencyMs,
-        } = JSON.parse(e.data);
-        this._latency = latencyMs;
+        return acc;
+      }, []);
 
-        // Handle Koji scoped messages
-        if (eventName === DISPATCH_EVENT.CONNECTED) {
-          this._clientId = payload.clientId;
-          this._shardName = payload.shardName;
-        }
-        if (eventName === DISPATCH_EVENT.CONNECTED_CLIENTS_CHANGED) {
-          this._connectedClients = payload.connectedClients;
-        }
+      const url = `${baseUrl}?${params.join('&')}`;
 
-        // Handle custom messages
-        this.eventHandlers.forEach((handler) => {
-          if (eventName === handler.eventName) {
-            handler.callback(payload);
+      // Create a socket connection to the dispatch server
+      this.ws = new Sockette(url, {
+        timeout: 5e3,
+        maxAttempts: 10,
+        onopen: (e) => {
+          // Set connection status
+          console.info('[Koji Dispatch] Connected');
+          this.isConnected = true;
+          resolve();
+
+          // Flush queue
+          if (this.messageQueue.length > 0) {
+            console.info(`[Koji Dispatch] Flushing ${this.messageQueue.length} enqueued message(s)`);
+            this.messageQueue.reduce((acc, cur) => {
+              if (this.ws) {
+                this.ws.send(cur);
+              }
+              return acc;
+            }, []);
           }
-        });
-      },
-      onreconnect: (e) => {
-        console.log('[Koji Dispatch] reconnected');
-      },
-      onmaximum: (e) => {
-        //
-      },
-      onclose: (e) => {
-        console.log('[Koji Dispatch] closed connection');
-      },
-      onerror: (e) => {
-        console.error('[Koji Dispatch] error', e);
-      },
+        },
+        onmessage: (e) => {
+          const {
+            eventName,
+            payload,
+            latencyMs,
+          } = JSON.parse(e.data);
+          this._latency = latencyMs;
+
+          // Handle Koji scoped messages
+          if (eventName === DISPATCH_EVENT.CONNECTED) {
+            this._clientId = payload.clientId;
+            this._shardName = payload.shardName;
+          }
+          if (eventName === DISPATCH_EVENT.CONNECTED_CLIENTS_CHANGED) {
+            this._connectedClients = payload.connectedClients;
+          }
+
+          // Handle custom messages
+          this.eventHandlers.forEach((handler) => {
+            if (eventName === handler.eventName) {
+              handler.callback(payload);
+            }
+          });
+        },
+        onreconnect: (e) => {
+          this.isConnected = true;
+          console.log('[Koji Dispatch] reconnected');
+        },
+        onmaximum: (e) => {
+          //
+        },
+        onclose: (e) => {
+          this.isConnected = false;
+          console.log('[Koji Dispatch] closed connection');
+        },
+        onerror: (e) => {
+          console.error('[Koji Dispatch] error', e);
+        },
+      });
     });
   }
 
@@ -167,7 +178,7 @@ export default class Dispatch {
       throw new Error('Message is too long to be sent through Koji Dispatch. Messages must be less than 128kb');
     }
 
-    if (!this.ws) {
+    if (!this.isConnected || !this.ws) {
       // Socket is not connected, add to queue to be flushed once the socket
       // conects
       this.messageQueue.push(message);

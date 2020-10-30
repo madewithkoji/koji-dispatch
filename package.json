@@ -1,6 +1,6 @@
 {
   "name": "@withkoji/dispatch",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Create real-time functionality in your Koji templates.",
   "main": "./dist/index.js",
   "repository": {
@@ -24,7 +24,9 @@
     "dist/**/*"
   ],
   "dependencies": {
-    "sockette": "^2.0.6"
+    "isomorphic-ws": "^4.0.1",
+    "sockette": "^2.0.6",
+    "ws": "^7.3.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
