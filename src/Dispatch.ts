@@ -92,21 +92,7 @@ export default class Dispatch {
         timeout: 5e3,
         maxAttempts: 10,
         onopen: (e) => {
-          // Set connection status
           console.info('[Koji Dispatch] Connected');
-          this.isConnected = true;
-          resolve();
-
-          // Flush queue
-          if (this.messageQueue.length > 0) {
-            console.info(`[Koji Dispatch] Flushing ${this.messageQueue.length} enqueued message(s)`);
-            this.messageQueue.reduce((acc, cur) => {
-              if (this.ws) {
-                this.ws.send(cur);
-              }
-              return acc;
-            }, []);
-          }
         },
         onmessage: (e) => {
           const {
@@ -120,7 +106,24 @@ export default class Dispatch {
           if (eventName === DISPATCH_EVENT.CONNECTED) {
             this._clientId = payload.clientId;
             this._shardName = payload.shardName;
+
+            // Resolve now that we've properly conencted, if we've been
+            // waiting for the promise
+            this.isConnected = true;
+            resolve();
+
+            // Flush queue
+            if (this.messageQueue.length > 0) {
+              console.info(`[Koji Dispatch] Flushing ${this.messageQueue.length} enqueued message(s)`);
+              this.messageQueue.reduce((acc, cur) => {
+                if (this.ws) {
+                  this.ws.send(cur);
+                }
+                return acc;
+              }, []);
+            }
           }
+
           if (eventName === DISPATCH_EVENT.CONNECTED_CLIENTS_CHANGED) {
             this._connectedClients = payload.connectedClients;
           }
@@ -182,10 +185,8 @@ export default class Dispatch {
     if (!this.isConnected || !this.ws) {
       // Socket is not connected, add to queue to be flushed once the socket
       // conects
-      console.log('not open, queing', message);
       this.messageQueue.push(message);
     } else {
-      console.log('sending', message);
       this.ws.send(message);
     }
   }
