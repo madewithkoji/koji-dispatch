@@ -6,6 +6,8 @@ export interface Config {
 export interface ConfigOptions {
   shardName?: string|null;
   maxConnectionsPerShard?: number;
+  projectToken?: string;
+  authorization?: string;
   [index: string]: any;
 }
 

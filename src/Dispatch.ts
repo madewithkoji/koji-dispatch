@@ -41,6 +41,11 @@ export default class Dispatch {
     return this._clientId;
   }
 
+  private _authToken: string|null = null;
+  public get authToken(): string|null {
+    return this._authToken;
+  }
+
   private _shardName: string|null = null;
   public get shardName(): string|null {
     return this._shardName;
@@ -86,6 +91,12 @@ export default class Dispatch {
       }, []);
 
       const url = `${baseUrl}?${params.join('&')}`;
+
+      // If we're already connecting with an identity token, trigger the
+      // message so it will send right after connection is established
+      if (this.options.authorization) {
+        this.identify(this.options.authorization);
+      }
 
       // Create a socket connection to the dispatch server
       this.ws = new Sockette(url, {
@@ -171,10 +182,11 @@ export default class Dispatch {
     this.eventHandlers = this.eventHandlers.filter(handler => handler.eventName !== eventName);
   }
 
-  emitEvent(eventName: string, payload: {[index: string]: any}) {
+  emitEvent(eventName: string, payload: {[index: string]: any}, recipients?: string[]) {
     const message = JSON.stringify({
       eventName,
       payload,
+      recipients,
     });
 
     if (message.length > 128e3) {
@@ -194,5 +206,12 @@ export default class Dispatch {
   setUserInfo(userInfo: {[index: string]: any}) {
     this._userInfo = userInfo;
     this.emitEvent('@@KOJI_DISPATCH/SET_USER_INFO', this._userInfo);
+  }
+
+  identify(authToken: string) {
+    this._authToken = authToken;
+    this.emitEvent('@@KOJI_DISPATCH/IDENTIFY', {
+      token: this._authToken,
+    });
   }
 }
