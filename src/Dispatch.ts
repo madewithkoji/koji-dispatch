@@ -123,6 +123,10 @@ export default class Dispatch {
             this.isConnected = true;
             resolve();
 
+            if (this.authToken) {
+              this.identify(this.authToken);
+            }
+
             // Flush queue
             if (this.messageQueue.length > 0) {
               console.info(`[Koji Dispatch] Flushing ${this.messageQueue.length} enqueued message(s)`);
