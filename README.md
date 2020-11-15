@@ -1,4 +1,5 @@
 # Koji Dispatch
+![npm (scoped)](https://img.shields.io/npm/v/@withkoji/dispatch?color=green&style=flat-square)
 
 **Create real-time functionality in your Koji templates.**
 
