@@ -7,9 +7,11 @@
 
 The @withkoji/dispatch package enables you to implement real-time functionality in your Koji template. For example, chats, multi-player games, and polls.
 
+You can use dispatch on the frontend to enable real-time updates and communication between connected clients. You can also use it transactionally on the backend to send secure messages to specific clients that have been identified with a short-lived token.
+
 ## Installation
 
-Install the package in the frontend service of your Koji project.
+Install the package in your Koji project.
 
 ```
 npm install --save @withkoji/dispatch
@@ -19,12 +21,24 @@ npm install --save @withkoji/dispatch
 
 ## Basic use
 
-Import and instantiate `Dispatch`.
+Import and instantiate `Dispatch` on the frontend.
 
 ```
 import Dispatch from '@withkoji/dispatch';
 const dispatch = new Dispatch({
   projectId: instantRemixing.get(['metadata', 'projectId']),
+});
+```
+
+Import and instantiate `Dispatch` on the backend.
+
+```
+import Dispatch from '@withkoji/dispatch';
+const dispatch = new Dispatch({
+  projectId: res.locals.KOJI_PROJECT_ID || process.env.KOJI_PROJECT_ID,
+  options: {
+    projectToken: res.locals.KOJI_PROJECT_TOKEN || process.env.KOJI_PROJECT_TOKEN,
+  },
 });
 ```
 
