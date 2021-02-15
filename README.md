@@ -5,6 +5,9 @@
 
 ## Overview
 
+**NOTE:**
+This package is deprecated and is included only for backwards compatibility. For new templates, use @withkoji/core.
+
 The @withkoji/dispatch package enables you to implement real-time functionality in your Koji template. For example, chats, multi-player games, and polls.
 
 You can use dispatch on the frontend to enable real-time updates and communication between connected clients. You can also use it transactionally on the backend to send secure messages to specific clients that have been identified with a short-lived token.
