@@ -6,7 +6,7 @@
 ## Overview
 
 **NOTE:**
-This package is deprecated and is included only for backwards compatibility. For new templates, use @withkoji/core.
+This package is deprecated and is included only for backwards compatibility. For new templates, use [@withkoji/core](https://developer.withkoji.com/reference/packages/withkoji-koji-core).
 
 The @withkoji/dispatch package enables you to implement real-time functionality in your Koji template. For example, chats, multi-player games, and polls.
 
