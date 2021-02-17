@@ -1,6 +1,6 @@
 {
   "name": "@withkoji/dispatch",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Create real-time functionality in your Koji templates.",
   "main": "./dist/index.js",
   "repository": {
