@@ -1,16 +1,17 @@
-# Koji Dispatch
+# Koji Dispatch (deprecated)
 ![npm (scoped)](https://img.shields.io/npm/v/@withkoji/dispatch?color=green&style=flat-square)
 
 **Create real-time functionality in your Koji templates.**
 
 ## Overview
 
-**[DEPRECATED]**
-This package is deprecated and is included only for backwards compatibility. For new templates, use [@withkoji/core](https://developer.withkoji.com/reference/packages/withkoji-koji-core).
-
 The @withkoji/dispatch package enables you to implement real-time functionality in your Koji template. For example, chats, multi-player games, and polls.
 
 You can use dispatch on the frontend to enable real-time updates and communication between connected clients. You can also use it transactionally on the backend to send secure messages to specific clients that have been identified with a short-lived token.
+
+**[DEPRECATED]**
+This package is deprecated and is included only for backwards compatibility.
+For new templates, use [@withkoji/core](https://developer.withkoji.com/reference/core/withkoji-koji-core).
 
 ## Installation
 
@@ -20,7 +21,7 @@ Install the package in your Koji project.
 npm install --save @withkoji/dispatch
 ```
 
-**NOTE:** You must also install the [@withkoji/vcc package](https://developer.withkoji.com/reference/packages/withkoji-vcc-package).
+**NOTE:** You must also install the [@withkoji/vcc package](https://developer.withkoji.com/reference/deprecated-packages/withkoji-vcc-package).
 
 ## Basic use
 
@@ -58,7 +59,7 @@ dispatch.on('myEvent', myHandlerFunction);
 
 ## Related resources
 
-* [Package documentation](https://developer.withkoji.com/reference/packages/withkoji-dispatch-package)
+* [Package documentation](https://developer.withkoji.com/reference/deprecated-packages/withkoji-dispatch-package)
 * [Vote counter template](http://developer.withkoji.com/docs/blueprints/vote-counter-blueprint)
 * [Koji homepage](http://withkoji.com/)
 
